@@ -1,0 +1,15 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>co.activarsas.cctv</groupId>
+  <artifactId>cctv_client</artifactId>
+  <version>0.2</version>
+  <name>VLCj RTP Client</name>
+  <description>VLCj RTP streaming client</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>uk.co.caprica</groupId>
+  		<artifactId>vlcj</artifactId>
+  		<version>3.7.0</version>
+  	</dependency>
+  </dependencies>
+</project>
