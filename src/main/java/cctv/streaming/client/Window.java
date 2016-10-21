@@ -8,12 +8,12 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 @SuppressWarnings("serial")
-public class Interfaz extends JFrame {
+public class Window extends JFrame {
 	
 	private Main main;
-	private PanelReproductor panelReproductor;
+	private Mosaic mosaic;
 
-	public Interfaz(Main main) {
+	public Window(Main main) {
 		this.main=main;
 		setLayout(new BorderLayout());
 		setBackground(Color.WHITE);
@@ -22,10 +22,10 @@ public class Interfaz extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
 		// Inicializacion de paneles				
-		panelReproductor= new PanelReproductor();		
+		mosaic = new Mosaic();
 		
 		// Registro de paneles				
-		add(panelReproductor,BorderLayout.CENTER);
+		add(mosaic,BorderLayout.CENTER);
 
 		addWindowListener(new WindowListener() {
 			public void windowClosing(WindowEvent e) {
@@ -40,12 +40,12 @@ public class Interfaz extends JFrame {
 		});
 		
 		JOptionPane.showMessageDialog(this, "READY!");
-		panelReproductor.run(this.main.getCamaras());
+		mosaic.run(this.main.getCameras());
 	}
 
 	public void onDispose() {		
 		super.dispose();	
-		panelReproductor.closeAll();	
+		mosaic.closeAll();
 		try {
 			main.serializar();
 		} catch (Exception e) {

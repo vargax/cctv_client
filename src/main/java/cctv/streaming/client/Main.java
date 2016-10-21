@@ -14,22 +14,22 @@ public class Main implements Serializable {
 	// Constants
 	// -----------------------------------------------
 	private static final long serialVersionUID = 917005948119571357L;
-	private static final String RUTASER = "./config.bin";
+	private static final String SERIAL_VERSION_PATH = "./config.bin";
 	
 	// -----------------------------------------------
 	// Attributes
 	// -----------------------------------------------
-	private ArrayList<Camara> camaras;
+	private ArrayList<Camera> cameras;
 
 	// -----------------------------------------------
 	// Constructors
 	// -----------------------------------------------
 	public Main() {
-		this.camaras = new ArrayList<Camara>();
+		this.cameras = new ArrayList<Camera>();
 	}
 	
-	public Main(ArrayList<Camara> camaras) {
-		this.camaras = camaras;
+	public Main(ArrayList<Camera> cameras) {
+		this.cameras = cameras;
 	}
 	
 	// -----------------------------------------------
@@ -49,18 +49,18 @@ public class Main implements Serializable {
 			main = new Main();
 		}
 		
-		Interfaz interfaz = new Interfaz(main);
-		interfaz.setVisible(true);
+		Window window = new Window(main);
+		window.setVisible(true);
 	}
 
 	// -----------------------------------------------
 	// Persistence
 	// -----------------------------------------------
 	public void serializar() throws Exception {
-		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(RUTASER));
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SERIAL_VERSION_PATH));
 		out.writeObject(this);
 		out.close();
-		System.out.printf("Serialized file saved to "+ RUTASER);
+		System.out.printf("Serialized file saved to "+ SERIAL_VERSION_PATH);
 	}
 
 	public static Main deserializar(String path) throws Exception {
@@ -71,21 +71,33 @@ public class Main implements Serializable {
 	}
 	
 	public static Main configurar(String path) throws Exception {
-		ArrayList<Camara> camaras = new ArrayList<Camara>();
+		ArrayList<Camera> cameras = new ArrayList<Camera>();
 		String line = null;
+        int lineNumber = 0;
 		
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
-		while ((line = bufferedReader.readLine()) != null)
-			camaras.add(new Camara(line));
+		while ((line = bufferedReader.readLine()) != null) {
+			lineNumber++;
+            if (line.startsWith("#"))
+				continue;
+
+			String[] streams = line.split(" ");
+			if (streams.length != 2) {
+				System.err.println("Skipping line "+lineNumber+" :: Invalid camera description! Expected mainstreamPath substreamPath");
+			}
+			String mainStream = streams[0];
+			String subStream = streams[1];
+			cameras.add(new Camera(mainStream, subStream));
+		}
 		
 		bufferedReader.close();
-		return new Main(camaras);
+		return new Main(cameras);
 	}
 
 	// -----------------------------------------------
 	// Getters
 	// -----------------------------------------------	
-	public ArrayList<Camara> getCamaras() {
-		return camaras;
+	public ArrayList<Camera> getCameras() {
+		return cameras;
 	}
 }
