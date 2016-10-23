@@ -78,7 +78,7 @@ public class Main implements Serializable {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 		while ((line = bufferedReader.readLine()) != null) {
 			lineNumber++;
-            if (line.startsWith("#"))
+            if (line.length() == 0 || line.startsWith("#"))
 				continue;
 
 			String[] streams = line.split(" ");

@@ -1,0 +1,9 @@
+# CCTV_Client config file example
+# [mainstreamPath] [substreamPath]
+#
+# Trendnet
+rtsp://streaming:ak53yHrtGeh1@192.168.10.55/play1.sdp rtsp://streaming:ak53yHrtGeh1@192.168.10.55/play2.sdp
+# Hikvision
+rtsp://streaming:pedEdMo4w3Ha@192.168.10.76/Streaming/Channels/101 rtsp://streaming:pedEdMo4w3Ha@192.168.10.76/Streaming/Channels/102
+# Foscam
+rtsp://streaming:2V62XFUNwRF7@192.168.10.63:80/videoMain rtsp://streaming:2V62XFUNwRF7@192.168.10.63:80/videoSub
