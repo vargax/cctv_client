@@ -16,6 +16,7 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 public class Mosaic extends JPanel {
 
 	private static final String NO_CAMERAS_FOUND = "No cameras found!";
+    private static final float ASPECT_RATIO = 16/9;
 	
 	private ArrayList<EmbeddedMediaPlayerComponent> mediaPlayers;
 	private EmbeddedMediaPlayerComponent mediaPlayer;
@@ -40,8 +41,8 @@ public class Mosaic extends JPanel {
 		int size = cameras.size();
 		if (size > 0) {
 
-			int grid=(int) Math.sqrt(size)+1;
-			setLayout(new GridLayout(grid,grid));
+			int rows=(int) Math.sqrt(ASPECT_RATIO*size);
+			setLayout(new GridLayout(rows,0));
 
 			mediaPlayers = new ArrayList<EmbeddedMediaPlayerComponent>();
 
