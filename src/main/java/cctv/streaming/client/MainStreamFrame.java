@@ -68,7 +68,11 @@ public class MainStreamFrame extends JFrame{
 	
 	public void play(String path, EmbeddedMediaPlayerComponent subStreamPlayer){
 		mainStreamPlayer.getMediaPlayer().stop();
-		this.subStreamPlayer.getMediaPlayer().play();
+		try {
+            this.subStreamPlayer.getMediaPlayer().play();
+        } catch (NullPointerException e) {
+
+        }
 
 		this.subStreamPlayer = subStreamPlayer;
 		mainStreamPlayer.getMediaPlayer().playMedia(path);
