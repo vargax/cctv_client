@@ -5,10 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 
@@ -83,17 +80,22 @@ public class Mosaic extends JPanel {
 					public void mouseEntered(MouseEvent e) {}
 
 					public void mouseClicked(MouseEvent e) {
-                        player.getMediaPlayer().stop();
 
-						if(mainStreamFrame == null || !mainStreamFrame.isVisible()){
-							mainStreamFrame = new MainStreamFrame();
-							mainStreamFrame.setVisible(true);
-						}					
-						mainStreamFrame.toFront();
-						mainStreamFrame.setExtendedState(JFrame.NORMAL);
-						mainStreamFrame.play(mainstream);
+						player.getMediaPlayer().stop();
 
-                        player.getMediaPlayer().play();
+						if (SwingUtilities.isLeftMouseButton(e)) {
+							if(mainStreamFrame == null || !mainStreamFrame.isVisible()){
+								mainStreamFrame = new MainStreamFrame();
+								mainStreamFrame.setVisible(true);
+							}
+							mainStreamFrame.toFront();
+							mainStreamFrame.setExtendedState(JFrame.NORMAL);
+
+							mainStreamFrame.play(mainstream, player);
+
+						} else {
+							player.getMediaPlayer().play();
+						}
 					}
 				});
 			}

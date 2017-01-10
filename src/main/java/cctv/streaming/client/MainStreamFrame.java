@@ -11,7 +11,8 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 public class MainStreamFrame extends JFrame{
 
 	
-	private EmbeddedMediaPlayerComponent temp;
+	private EmbeddedMediaPlayerComponent mainStreamPlayer;
+	protected EmbeddedMediaPlayerComponent subStreamPlayer;
 	private String path;
 
 	public MainStreamFrame() {
@@ -19,8 +20,8 @@ public class MainStreamFrame extends JFrame{
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);		
 		setLocationRelativeTo(null);
 
-		temp = new EmbeddedMediaPlayerComponent();
-		add(temp);
+		mainStreamPlayer = new EmbeddedMediaPlayerComponent();
+		add(mainStreamPlayer);
 
 		addWindowListener(new WindowListener() {
 			
@@ -45,9 +46,10 @@ public class MainStreamFrame extends JFrame{
 			}
 			
 			public void windowClosing(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				temp.getMediaPlayer().stop();
-				removeAll();
+				mainStreamPlayer.getMediaPlayer().stop();
+                subStreamPlayer.getMediaPlayer().play();
+
+                removeAll();
 				dispose();
 				
 			}
@@ -64,16 +66,11 @@ public class MainStreamFrame extends JFrame{
 		});
 	}
 	
-	public void play(String path){
-		temp.getMediaPlayer().stop();
-		temp.getMediaPlayer().playMedia(path);
-	}
+	public void play(String path, EmbeddedMediaPlayerComponent subStreamPlayer){
+		mainStreamPlayer.getMediaPlayer().stop();
+		this.subStreamPlayer.getMediaPlayer().play();
 
-	public void close() {
-		super.dispose();
-		dispose();
-		
+		this.subStreamPlayer = subStreamPlayer;
+		mainStreamPlayer.getMediaPlayer().playMedia(path);
 	}
-	
-	
 }
