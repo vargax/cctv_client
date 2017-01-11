@@ -5,6 +5,9 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -19,18 +22,12 @@ public class Mosaic extends JPanel {
 	private EmbeddedMediaPlayerComponent mediaPlayer;
 	private MainStreamFrame mainStreamFrame;
 
+    private final ScheduledExecutorService cameraTester = Executors.newScheduledThreadPool(1);
+
 	public Mosaic() {
 		setSize(500, 500);		
 		setBorder(BorderFactory.createEmptyBorder(0,10,10,10));
 		setBackground(Color.BLACK);				
-	}
-
-	public EmbeddedMediaPlayerComponent getMediaPlayer() {
-		return mediaPlayer;
-	}
-
-	public void setMediaPlayer(EmbeddedMediaPlayerComponent mediaPlayer) {
-		this.mediaPlayer = mediaPlayer;
 	}
 
 	public void run(ArrayList<Camera> cameras) {
@@ -100,6 +97,21 @@ public class Mosaic extends JPanel {
 				});
 			}
 			updateUI();
+
+            cameraTester.scheduleAtFixedRate(new Runnable() {
+                public void run() {
+                    System.out.println("cameraTester starts!");
+                    for (int i = 0; i < mediaPlayers.size(); i++) {
+                        EmbeddedMediaPlayerComponent player = mediaPlayers.get(i);
+                        if (!player.getMediaPlayer().isPlaying()) {
+                            System.out.println("  Camera "+i+" stopped! Restarting...");
+                            player.getMediaPlayer().play();
+                        }
+                    }
+                }
+            },5,60, TimeUnit.SECONDS);
+
+
 		} else {		
 			JOptionPane.showMessageDialog(this, NO_CAMERAS_FOUND);
 		}
@@ -107,6 +119,7 @@ public class Mosaic extends JPanel {
 
 	public void closeAll() {
 		try {
+            cameraTester.shutdown();
 			for(EmbeddedMediaPlayerComponent media : mediaPlayers)
 				media.getMediaPlayer().stop();
 			removeAll();

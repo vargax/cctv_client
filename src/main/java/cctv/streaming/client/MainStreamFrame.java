@@ -51,7 +51,6 @@ public class MainStreamFrame extends JFrame{
 
                 removeAll();
 				dispose();
-				
 			}
 			
 			public void windowClosed(WindowEvent arg0) {
