@@ -4,10 +4,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.Timer;
 import javax.swing.*;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -22,7 +20,7 @@ public class Mosaic extends JPanel {
 	private EmbeddedMediaPlayerComponent mediaPlayer;
 	private MainStreamFrame mainStreamFrame;
 
-    private final ScheduledExecutorService cameraTester = Executors.newScheduledThreadPool(1);
+    private Timer timer;
 
 	public Mosaic() {
 		setSize(500, 500);		
@@ -49,6 +47,7 @@ public class Mosaic extends JPanel {
                 System.out.println("Adding camera " + cameras.get(i).getSubstream());
 				add(mediaPlayer);
 			}
+            updateUI();
 
 			for (int j = 0; j < mediaPlayers.size(); j++) {
 				final EmbeddedMediaPlayerComponent player = mediaPlayers.get(j);
@@ -79,6 +78,11 @@ public class Mosaic extends JPanel {
 					public void mouseClicked(MouseEvent e) {
 
 						player.getMediaPlayer().stop();
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 
 						if (SwingUtilities.isLeftMouseButton(e)) {
 							if(mainStreamFrame == null || !mainStreamFrame.isVisible()){
@@ -98,18 +102,8 @@ public class Mosaic extends JPanel {
 			}
 			updateUI();
 
-            cameraTester.scheduleAtFixedRate(new Runnable() {
-                public void run() {
-                    System.out.println("cameraTester starts!");
-                    for (int i = 0; i < mediaPlayers.size(); i++) {
-                        EmbeddedMediaPlayerComponent player = mediaPlayers.get(i);
-                        if (!player.getMediaPlayer().isPlaying()) {
-                            System.out.println("  Camera "+i+" stopped! Restarting...");
-                            player.getMediaPlayer().play();
-                        }
-                    }
-                }
-            },5,60, TimeUnit.SECONDS);
+            timer = new Timer(true);
+            timer.scheduleAtFixedRate(new CameraTestTask(mediaPlayers), 60*1000, 10*60*1000);
 
 
 		} else {		
@@ -119,7 +113,7 @@ public class Mosaic extends JPanel {
 
 	public void closeAll() {
 		try {
-            cameraTester.shutdown();
+            timer.cancel();
 			for(EmbeddedMediaPlayerComponent media : mediaPlayers)
 				media.getMediaPlayer().stop();
 			removeAll();
