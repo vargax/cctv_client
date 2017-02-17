@@ -10,11 +10,37 @@ import java.util.TimerTask;
  */
 public class CameraTestTask extends TimerTask {
 
-    private ArrayList<EmbeddedMediaPlayerComponent> mediaPlayers;
+    public final static String TEST = "test";
+    public final static String RESET = "reset";
 
-    public CameraTestTask(ArrayList<EmbeddedMediaPlayerComponent> mediaPlayers) {
+    private ArrayList<EmbeddedMediaPlayerComponent> mediaPlayers;
+    private String mode;
+
+    public CameraTestTask(ArrayList<EmbeddedMediaPlayerComponent> mediaPlayers, String mode) {
         this.mediaPlayers = mediaPlayers;
-        System.out.println("CameraTesterTask ready with "+mediaPlayers.size()+" cameras");
+        this.mode = mode;
+
+        System.out.println("CameraTesterTask setup as "+mode+" with "+mediaPlayers.size()+" cameras");
+    }
+
+    public void test(EmbeddedMediaPlayerComponent player, int index) {
+        if (player.getMediaPlayer().isPlaying()) {
+            System.out.println("+ Camera "+index+" is playing --> OK");
+        } else {
+            System.out.println("+ Camera "+index+" is stopped --> Restarting...");
+            player.getMediaPlayer().play();
+        }
+    }
+
+    public void reset (EmbeddedMediaPlayerComponent player, int index) {
+        System.out.println("! Resetting camera "+index+"...");
+        player.getMediaPlayer().stop();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        player.getMediaPlayer().start();
     }
 
     public void run() {
@@ -22,11 +48,10 @@ public class CameraTestTask extends TimerTask {
         for (int i = 0; i < mediaPlayers.size(); i++) {
             EmbeddedMediaPlayerComponent player = mediaPlayers.get(i);
 
-            if (player.getMediaPlayer().isPlaying()) {
-                System.out.println("+ Camera "+i+" is playing --> OK");
-            } else {
-                System.out.println("+ Camera "+i+" is stopped --> Restarting...");
-                player.getMediaPlayer().play();
+            if (mode.equals(TEST)) {
+                test(player, i);
+            } else if (mode.equals(RESET)) {
+                reset(player, i);
             }
 
             try {

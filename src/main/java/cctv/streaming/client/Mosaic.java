@@ -103,8 +103,8 @@ public class Mosaic extends JPanel {
 			updateUI();
 
             timer = new Timer(true);
-            timer.scheduleAtFixedRate(new CameraTestTask(mediaPlayers), 60*1000, 10*60*1000);
-
+            timer.scheduleAtFixedRate(new CameraTestTask(mediaPlayers, CameraTestTask.TEST), 60*1000, 10*60*1000);
+            timer.scheduleAtFixedRate(new CameraTestTask(mediaPlayers, CameraTestTask.RESET), 5*60*1000, 60*60*1000);
 
 		} else {		
 			JOptionPane.showMessageDialog(this, NO_CAMERAS_FOUND);
