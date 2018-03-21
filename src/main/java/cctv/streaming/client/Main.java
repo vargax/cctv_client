@@ -44,11 +44,12 @@ public class Main implements Serializable {
 		} else if (args.length == 1 && args[0].endsWith(".plain")) {
 			System.out.println("Loading configuration from a plain file...");
 			main = configurar(args[0]);
+            main.serializar();
 		} else {
 			System.out.println("No config file selected...");
 			main = new Main();
 		}
-		
+
 		Window window = new Window(main);
 		window.setVisible(true);
 	}

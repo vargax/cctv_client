@@ -43,14 +43,9 @@ public class Window extends JFrame {
 		mosaic.run(this.main.getCameras());
 	}
 
-	public void onDispose() {		
-		super.dispose();	
+	public void onDispose() {
 		mosaic.closeAll();
-		try {
-			main.serializar();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		super.dispose();
 		System.exit(0);
 	}
 }
